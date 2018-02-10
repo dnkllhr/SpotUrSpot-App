@@ -80,7 +80,9 @@ __d(function (global, require, module, exports, _dependencyMap) {
         },
         polygons: [],
         editing: null,
-        creatingHole: false
+        creatingHole: false,
+        mapView: true,
+        selectedID: null
       };
       return _this;
     }
@@ -127,6 +129,16 @@ __d(function (global, require, module, exports, _dependencyMap) {
             creatingHole: false
           });
         }
+      }
+    }, {
+      key: "chooseMusic",
+      value: function chooseMusic(id) {
+        this.setState({
+          mapView: false
+        });
+        this.setState({
+          selectedID: id
+        });
       }
     }, {
       key: "onPress",
@@ -178,114 +190,142 @@ __d(function (global, require, module, exports, _dependencyMap) {
           };
         }
 
-        return _react3.default.createElement(
-          _reactNative.View,
-          {
-            style: styles.container,
-            __source: {
-              fileName: _jsxFileName,
-              lineNumber: 125
-            }
-          },
-          _react3.default.createElement(
-            _reactNativeMaps2.default,
-            _extends({
-              provider: this.props.provider,
-              style: styles.map,
-              initialRegion: this.state.region,
-              onPress: function onPress(e) {
-                return _this2.onPress(e);
-              }
-            }, mapOptions, {
+        if (this.state.mapView) {
+          return _react3.default.createElement(
+            _reactNative.View,
+            {
+              style: styles.container,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 126
+                lineNumber: 133
               }
-            }),
-            this.state.polygons.map(function (polygon) {
-              return _react3.default.createElement(_reactNativeMaps.Polygon, {
-                key: polygon.id,
-                coordinates: polygon.coordinates,
-                holes: polygon.holes,
-                strokeColor: "#F00",
-                fillColor: "rgba(255,0,0,0.5)",
-                strokeWidth: 1,
+            },
+            _react3.default.createElement(
+              _reactNativeMaps2.default,
+              _extends({
+                provider: this.props.provider,
+                style: styles.map,
+                initialRegion: this.state.region,
+                onPress: function onPress(e) {
+                  return _this2.onPress(e);
+                }
+              }, mapOptions, {
                 __source: {
                   fileName: _jsxFileName,
                   lineNumber: 134
                 }
-              });
-            }),
-            this.state.editing && _react3.default.createElement(_reactNativeMaps.Polygon, {
-              key: this.state.editing.id,
-              coordinates: this.state.editing.coordinates,
-              holes: this.state.editing.holes,
-              strokeColor: "#000",
-              fillColor: "rgba(255,0,0,0.5)",
-              strokeWidth: 1,
-              __source: {
-                fileName: _jsxFileName,
-                lineNumber: 144
-              }
-            })
-          ),
-          _react3.default.createElement(
-            _reactNative.View,
-            {
-              style: styles.buttonContainer,
-              __source: {
-                fileName: _jsxFileName,
-                lineNumber: 154
-              }
-            },
-            this.state.editing && _react3.default.createElement(
-              _reactNative.TouchableOpacity,
-              {
-                onPress: function onPress() {
-                  return _this2.createHole();
-                },
-                style: [styles.bubble, styles.button],
-                __source: {
-                  fileName: _jsxFileName,
-                  lineNumber: 156
-                }
-              },
-              _react3.default.createElement(
-                _reactNative.Text,
-                {
+              }),
+              this.state.polygons.map(function (polygon) {
+                return _react3.default.createElement(_reactNativeMaps.Polygon, {
+                  key: polygon.id,
+                  coordinates: polygon.coordinates,
+                  holes: polygon.holes,
+                  strokeColor: "#F00",
+                  fillColor: "rgba(255,0,0,0.5)",
+                  strokeWidth: 1,
+                  tappable: true,
+                  onPress: function onPress() {
+                    return _this2.chooseMusic(polygon.id);
+                  },
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 160
+                    lineNumber: 142
                   }
-                },
-                this.state.creatingHole ? 'Finish Hole' : 'Create Hole'
-              )
+                });
+              }),
+              this.state.editing && _react3.default.createElement(_reactNativeMaps.Polygon, {
+                key: this.state.editing.id,
+                coordinates: this.state.editing.coordinates,
+                holes: this.state.editing.holes,
+                strokeColor: "#000",
+                fillColor: "rgba(255,0,0,0.5)",
+                strokeWidth: 1,
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 154
+                }
+              })
             ),
-            this.state.editing && _react3.default.createElement(
-              _reactNative.TouchableOpacity,
+            _react3.default.createElement(
+              _reactNative.View,
               {
-                onPress: function onPress() {
-                  return _this2.finish();
-                },
-                style: [styles.bubble, styles.button],
+                style: styles.buttonContainer,
                 __source: {
                   fileName: _jsxFileName,
                   lineNumber: 164
                 }
               },
-              _react3.default.createElement(
-                _reactNative.Text,
+              this.state.editing && _react3.default.createElement(
+                _reactNative.TouchableOpacity,
                 {
+                  onPress: function onPress() {
+                    return _this2.createHole();
+                  },
+                  style: [styles.bubble, styles.button],
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 168
+                    lineNumber: 166
                   }
                 },
-                "Finish"
+                _react3.default.createElement(
+                  _reactNative.Text,
+                  {
+                    __source: {
+                      fileName: _jsxFileName,
+                      lineNumber: 170
+                    }
+                  },
+                  this.state.creatingHole ? 'Finish Hole' : 'Create Hole'
+                )
+              ),
+              this.state.editing && _react3.default.createElement(
+                _reactNative.TouchableOpacity,
+                {
+                  onPress: function onPress() {
+                    return _this2.finish();
+                  },
+                  style: [styles.bubble, styles.button],
+                  __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 174
+                  }
+                },
+                _react3.default.createElement(
+                  _reactNative.Text,
+                  {
+                    __source: {
+                      fileName: _jsxFileName,
+                      lineNumber: 178
+                    }
+                  },
+                  "Finish"
+                )
               )
             )
-          )
-        );
+          );
+        } else {
+          return _react3.default.createElement(
+            _reactNative.View,
+            {
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 188
+              }
+            },
+            _react3.default.createElement(
+              _reactNative.Text,
+              {
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 189
+                }
+              },
+              " ",
+              this.state.selectedID,
+              " "
+            )
+          );
+        }
       }
     }]);
 

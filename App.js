@@ -32,6 +32,8 @@ class PolygonCreator extends React.Component {
       polygons: [],
       editing: null,
       creatingHole: false,
+      mapView: true,
+      selectedID : null
     };
   }
 
@@ -70,6 +72,11 @@ class PolygonCreator extends React.Component {
       }
       this.setState({ creatingHole: false });
     }
+  }
+
+  chooseMusic(id){
+    this.setState({ mapView: false });
+    this.setState({selectedID: id });
   }
 
   onPress(e) {
@@ -121,6 +128,7 @@ class PolygonCreator extends React.Component {
       mapOptions.onPanDrag = e => this.onPress(e);
     }
 
+    if(this.state.mapView){
     return (
       <View style={styles.container}>
         <MapView
@@ -138,6 +146,8 @@ class PolygonCreator extends React.Component {
               strokeColor="#F00"
               fillColor="rgba(255,0,0,0.5)"
               strokeWidth={1}
+              tappable={true}
+              onPress={() => this.chooseMusic(polygon.id)}
             />
           ))}
           {this.state.editing && (
@@ -172,6 +182,16 @@ class PolygonCreator extends React.Component {
       </View>
     );
   }
+
+  else {
+    return(
+      <View>
+        <Text> {this.state.selectedID} </Text>
+      </View>
+    );
+  }
+}
+
 }
 
 PolygonCreator.propTypes = {
