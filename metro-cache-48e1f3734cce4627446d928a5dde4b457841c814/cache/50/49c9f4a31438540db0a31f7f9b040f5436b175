@@ -13,15 +13,19 @@ __d(function (global, require, module, exports, _dependencyMap) {
 
   var _jsxFileName = "/home/aidan/Documents/SpotUrSpot/App.js";
 
+  var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _reactNativeMaps = require(_dependencyMap[2], "react-native-maps");
+  var _reactNative = require(_dependencyMap[2], "react-native");
+
+  var _reactNativeMaps = require(_dependencyMap[3], "react-native-maps");
 
   var _reactNativeMaps2 = _interopRequireDefault(_reactNativeMaps);
 
-  var _reactNative = require(_dependencyMap[3], "react-native");
-
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+  function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -30,8 +34,8 @@ __d(function (global, require, module, exports, _dependencyMap) {
   function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _components = {
-    App: {
-      displayName: "App"
+    PolygonCreator: {
+      displayName: "PolygonCreator"
     }
   };
 
@@ -48,38 +52,278 @@ __d(function (global, require, module, exports, _dependencyMap) {
     };
   }
 
-  var App = _wrapComponent("App")(function (_Component) {
-    _inherits(App, _Component);
+  var _Dimensions$get = _reactNative.Dimensions.get('window'),
+      width = _Dimensions$get.width,
+      height = _Dimensions$get.height;
 
-    function App() {
-      _classCallCheck(this, App);
+  var ASPECT_RATIO = width / height;
+  var LATITUDE = 37.78825;
+  var LONGITUDE = -122.4324;
+  var LATITUDE_DELTA = 0.0922;
+  var LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+  var id = 0;
 
-      return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+  var PolygonCreator = _wrapComponent("PolygonCreator")(function (_React$Component) {
+    _inherits(PolygonCreator, _React$Component);
+
+    function PolygonCreator(props) {
+      _classCallCheck(this, PolygonCreator);
+
+      var _this = _possibleConstructorReturn(this, (PolygonCreator.__proto__ || Object.getPrototypeOf(PolygonCreator)).call(this, props));
+
+      _this.state = {
+        region: {
+          latitude: LATITUDE,
+          longitude: LONGITUDE,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA
+        },
+        polygons: [],
+        editing: null,
+        creatingHole: false
+      };
+      return _this;
     }
 
-    _createClass(App, [{
+    _createClass(PolygonCreator, [{
+      key: "finish",
+      value: function finish() {
+        var _state = this.state,
+            polygons = _state.polygons,
+            editing = _state.editing;
+        this.setState({
+          polygons: [].concat(_toConsumableArray(polygons), [editing]),
+          editing: null,
+          creatingHole: false
+        });
+      }
+    }, {
+      key: "createHole",
+      value: function createHole() {
+        var _state2 = this.state,
+            editing = _state2.editing,
+            creatingHole = _state2.creatingHole;
+
+        if (!creatingHole) {
+          this.setState({
+            creatingHole: true,
+            editing: _extends({}, editing, {
+              holes: [].concat(_toConsumableArray(editing.holes), [[]])
+            })
+          });
+        } else {
+          var holes = [].concat(_toConsumableArray(editing.holes));
+
+          if (holes[holes.length - 1].length === 0) {
+            holes.pop();
+            this.setState({
+              editing: _extends({}, editing, {
+                holes: holes
+              })
+            });
+          }
+
+          this.setState({
+            creatingHole: false
+          });
+        }
+      }
+    }, {
+      key: "onPress",
+      value: function onPress(e) {
+        var _state3 = this.state,
+            editing = _state3.editing,
+            creatingHole = _state3.creatingHole;
+
+        if (!editing) {
+          this.setState({
+            editing: {
+              id: id++,
+              coordinates: [e.nativeEvent.coordinate],
+              holes: []
+            }
+          });
+        } else if (!creatingHole) {
+          this.setState({
+            editing: _extends({}, editing, {
+              coordinates: [].concat(_toConsumableArray(editing.coordinates), [e.nativeEvent.coordinate])
+            })
+          });
+        } else {
+          var holes = [].concat(_toConsumableArray(editing.holes));
+          holes[holes.length - 1] = [].concat(_toConsumableArray(holes[holes.length - 1]), [e.nativeEvent.coordinate]);
+          this.setState({
+            editing: _extends({}, editing, {
+              id: id++,
+              coordinates: [].concat(_toConsumableArray(editing.coordinates)),
+              holes: holes
+            })
+          });
+        }
+      }
+    }, {
       key: "render",
       value: function render() {
-        return _react3.default.createElement(_reactNativeMaps2.default, {
-          style: {
-            flex: 1
+        var _this2 = this;
+
+        var mapOptions = {
+          scrollEnabled: true
+        };
+
+        if (this.state.editing) {
+          mapOptions.scrollEnabled = false;
+
+          mapOptions.onPanDrag = function (e) {
+            return _this2.onPress(e);
+          };
+        }
+
+        return _react3.default.createElement(
+          _reactNative.View,
+          {
+            style: styles.container,
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 125
+            }
           },
-          initialRegion: {
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
-          },
-          __source: {
-            fileName: _jsxFileName,
-            lineNumber: 20
-          }
-        });
+          _react3.default.createElement(
+            _reactNativeMaps2.default,
+            _extends({
+              provider: this.props.provider,
+              style: styles.map,
+              initialRegion: this.state.region,
+              onPress: function onPress(e) {
+                return _this2.onPress(e);
+              }
+            }, mapOptions, {
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 126
+              }
+            }),
+            this.state.polygons.map(function (polygon) {
+              return _react3.default.createElement(_reactNativeMaps.Polygon, {
+                key: polygon.id,
+                coordinates: polygon.coordinates,
+                holes: polygon.holes,
+                strokeColor: "#F00",
+                fillColor: "rgba(255,0,0,0.5)",
+                strokeWidth: 1,
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 134
+                }
+              });
+            }),
+            this.state.editing && _react3.default.createElement(_reactNativeMaps.Polygon, {
+              key: this.state.editing.id,
+              coordinates: this.state.editing.coordinates,
+              holes: this.state.editing.holes,
+              strokeColor: "#000",
+              fillColor: "rgba(255,0,0,0.5)",
+              strokeWidth: 1,
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 144
+              }
+            })
+          ),
+          _react3.default.createElement(
+            _reactNative.View,
+            {
+              style: styles.buttonContainer,
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 154
+              }
+            },
+            this.state.editing && _react3.default.createElement(
+              _reactNative.TouchableOpacity,
+              {
+                onPress: function onPress() {
+                  return _this2.createHole();
+                },
+                style: [styles.bubble, styles.button],
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 156
+                }
+              },
+              _react3.default.createElement(
+                _reactNative.Text,
+                {
+                  __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 160
+                  }
+                },
+                this.state.creatingHole ? 'Finish Hole' : 'Create Hole'
+              )
+            ),
+            this.state.editing && _react3.default.createElement(
+              _reactNative.TouchableOpacity,
+              {
+                onPress: function onPress() {
+                  return _this2.finish();
+                },
+                style: [styles.bubble, styles.button],
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 164
+                }
+              },
+              _react3.default.createElement(
+                _reactNative.Text,
+                {
+                  __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 168
+                  }
+                },
+                "Finish"
+              )
+            )
+          )
+        );
       }
     }]);
 
-    return App;
-  }(_react2.Component));
+    return PolygonCreator;
+  }(_react3.default.Component));
 
-  exports.default = App;
+  PolygonCreator.propTypes = {
+    provider: _reactNativeMaps.ProviderPropType
+  };
+
+  var styles = _reactNative.StyleSheet.create({
+    container: _extends({}, _reactNative.StyleSheet.absoluteFillObject, {
+      justifyContent: 'flex-end',
+      alignItems: 'center'
+    }),
+    map: _extends({}, _reactNative.StyleSheet.absoluteFillObject),
+    bubble: {
+      backgroundColor: 'rgba(255,255,255,0.7)',
+      paddingHorizontal: 18,
+      paddingVertical: 12,
+      borderRadius: 20
+    },
+    latlng: {
+      width: 200,
+      alignItems: 'stretch'
+    },
+    button: {
+      width: 80,
+      paddingHorizontal: 12,
+      alignItems: 'center',
+      marginHorizontal: 10
+    },
+    buttonContainer: {
+      flexDirection: 'row',
+      marginVertical: 20,
+      backgroundColor: 'transparent'
+    }
+  });
+
+  exports.default = PolygonCreator;
 });
