@@ -1,0 +1,116 @@
+__d(function (global, require, module, exports, _dependencyMap) {
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.MAP_TYPES = exports.ProviderPropType = exports.Animated = exports.AnimatedRegion = exports.Callout = exports.Overlay = exports.LocalTile = exports.UrlTile = exports.Circle = exports.Polygon = exports.Polyline = exports.Marker = undefined;
+
+  var _MapMarker = require(_dependencyMap[0], "./lib/components/MapMarker.js");
+
+  Object.defineProperty(exports, "Marker", {
+    enumerable: true,
+    get: function get() {
+      return _interopRequireDefault(_MapMarker).default;
+    }
+  });
+
+  var _MapPolyline = require(_dependencyMap[1], "./lib/components/MapPolyline.js");
+
+  Object.defineProperty(exports, "Polyline", {
+    enumerable: true,
+    get: function get() {
+      return _interopRequireDefault(_MapPolyline).default;
+    }
+  });
+
+  var _MapPolygon = require(_dependencyMap[2], "./lib/components/MapPolygon.js");
+
+  Object.defineProperty(exports, "Polygon", {
+    enumerable: true,
+    get: function get() {
+      return _interopRequireDefault(_MapPolygon).default;
+    }
+  });
+
+  var _MapCircle = require(_dependencyMap[3], "./lib/components/MapCircle.js");
+
+  Object.defineProperty(exports, "Circle", {
+    enumerable: true,
+    get: function get() {
+      return _interopRequireDefault(_MapCircle).default;
+    }
+  });
+
+  var _MapUrlTile = require(_dependencyMap[4], "./lib/components/MapUrlTile.js");
+
+  Object.defineProperty(exports, "UrlTile", {
+    enumerable: true,
+    get: function get() {
+      return _interopRequireDefault(_MapUrlTile).default;
+    }
+  });
+
+  var _MapLocalTile = require(_dependencyMap[5], "./lib/components/MapLocalTile.js");
+
+  Object.defineProperty(exports, "LocalTile", {
+    enumerable: true,
+    get: function get() {
+      return _interopRequireDefault(_MapLocalTile).default;
+    }
+  });
+
+  var _MapOverlay = require(_dependencyMap[6], "./lib/components/MapOverlay.js");
+
+  Object.defineProperty(exports, "Overlay", {
+    enumerable: true,
+    get: function get() {
+      return _interopRequireDefault(_MapOverlay).default;
+    }
+  });
+
+  var _MapCallout = require(_dependencyMap[7], "./lib/components/MapCallout.js");
+
+  Object.defineProperty(exports, "Callout", {
+    enumerable: true,
+    get: function get() {
+      return _interopRequireDefault(_MapCallout).default;
+    }
+  });
+
+  var _AnimatedRegion = require(_dependencyMap[8], "./lib/components/AnimatedRegion.js");
+
+  Object.defineProperty(exports, "AnimatedRegion", {
+    enumerable: true,
+    get: function get() {
+      return _interopRequireDefault(_AnimatedRegion).default;
+    }
+  });
+
+  var _MapView = require(_dependencyMap[9], "./lib/components/MapView.js");
+
+  Object.defineProperty(exports, "Animated", {
+    enumerable: true,
+    get: function get() {
+      return _MapView.Animated;
+    }
+  });
+  Object.defineProperty(exports, "ProviderPropType", {
+    enumerable: true,
+    get: function get() {
+      return _MapView.ProviderPropType;
+    }
+  });
+  Object.defineProperty(exports, "MAP_TYPES", {
+    enumerable: true,
+    get: function get() {
+      return _MapView.MAP_TYPES;
+    }
+  });
+
+  var _MapView2 = require(_dependencyMap[10], "./lib/components/MapView");
+
+  var _MapView3 = _interopRequireDefault(_MapView2);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+  exports.default = _MapView3.default;
+});
