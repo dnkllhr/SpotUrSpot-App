@@ -27,6 +27,7 @@ class PolygonCreator extends React.Component {
     this.playlistNames = [];
     this.playlistData = {}
     this.state = {
+      spotCreated: false,
       edit: false,
       polygons: [],
       error: null,
@@ -118,13 +119,19 @@ class PolygonCreator extends React.Component {
   }
 
   finish() {
+    if(this.state.spotCreated){
     const { polygons, editing } = this.state;
-    this.setState({
-      polygons: [...polygons, editing],
-      editing: null,
-      creatingHole: false,
-      edit: false
-    });
+        this.setState({
+          polygons: [...polygons, editing],
+          editing: null,
+          creatingHole: false,
+          edit: false
+        });
+      }
+      else{
+        this.setState({edit: false})
+      }
+      this.setState({spotCreated: false})
   }
 
   edit(){
@@ -202,6 +209,7 @@ class PolygonCreator extends React.Component {
 
   onPress(e) {
     if(this.state.edit){
+      this.setState({ spotCreated: true });
     const { editing, creatingHole } = this.state;
     if (!editing) {
       this.setState({
@@ -273,7 +281,7 @@ class PolygonCreator extends React.Component {
               coordinates={polygon.coordinates}
               holes={polygon.holes}
               strokeColor="#F00"
-              fillColor="rgba(255,0,0,0.5)"
+              fillColor="rgba(255,130,227,0.5)"
               strokeWidth={1}
               tappable={true}
               onPress={() => this.chooseMusic(polygon.id)}
@@ -285,7 +293,7 @@ class PolygonCreator extends React.Component {
               coordinates={this.state.editing.coordinates}
               holes={this.state.editing.holes}
               strokeColor="#000"
-              fillColor="rgba(255,0,0,0.5)"
+              fillColor="rgba(255,130,227,0.5)"
               strokeWidth={1}
               tappable={true}
               onPress={() => this.chooseMusic(polygon.id)}
@@ -294,10 +302,10 @@ class PolygonCreator extends React.Component {
         </MapView>
         <View style={styles.buttonContainer}>
           {!this.state.edit && (
-            <FAB buttonColor="red" iconTextColor="#FFFFFF" onClickAction={() => {this.edit()}} visible={true} />
+            <FAB buttonColor="#81FEC4" iconTextColor="#FFFFFF" onClickAction={() => {this.edit()}} visible={true} />
           )}
           {this.state.edit && (
-            <FAB buttonColor="red" iconTextColor="#FFFFFF" onClickAction={() => {this.finish()}} visible={true} iconTextComponent={<Text>x</Text>}/>
+            <FAB buttonColor="#81FEC4" iconTextColor="#FFFFFF" onClickAction={() => {this.finish()}} visible={true} iconTextComponent={<Text>x</Text>}/>
           )}
         </View>
       </View>
@@ -359,7 +367,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     marginVertical: 15,
-    paddingHorizontal: 160,
+    paddingHorizontal: 185,
     //backgroundColor: 'transparent',
   },
   listContainer: {

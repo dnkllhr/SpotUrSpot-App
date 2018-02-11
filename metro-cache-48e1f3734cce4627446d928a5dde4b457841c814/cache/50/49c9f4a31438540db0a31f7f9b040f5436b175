@@ -86,6 +86,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
       _this.playlistNames = [];
       _this.playlistData = {};
       _this.state = {
+        spotCreated: false,
         edit: false,
         polygons: [],
         error: null,
@@ -206,14 +207,24 @@ __d(function (global, require, module, exports, _dependencyMap) {
     }, {
       key: "finish",
       value: function finish() {
-        var _state = this.state,
-            polygons = _state.polygons,
-            editing = _state.editing;
+        if (this.state.spotCreated) {
+          var _state = this.state,
+              polygons = _state.polygons,
+              editing = _state.editing;
+          this.setState({
+            polygons: [].concat(_toConsumableArray(polygons), [editing]),
+            editing: null,
+            creatingHole: false,
+            edit: false
+          });
+        } else {
+          this.setState({
+            edit: false
+          });
+        }
+
         this.setState({
-          polygons: [].concat(_toConsumableArray(polygons), [editing]),
-          editing: null,
-          creatingHole: false,
-          edit: false
+          spotCreated: false
         });
       }
     }, {
@@ -322,6 +333,9 @@ __d(function (global, require, module, exports, _dependencyMap) {
       key: "onPress",
       value: function onPress(e) {
         if (this.state.edit) {
+          this.setState({
+            spotCreated: true
+          });
           var _state3 = this.state,
               editing = _state3.editing,
               creatingHole = _state3.creatingHole;
@@ -377,7 +391,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
               style: styles.container,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 256
+                lineNumber: 264
               }
             },
             _react3.default.createElement(
@@ -395,7 +409,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
               }, mapOptions, {
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 257
+                  lineNumber: 265
                 }
               }),
               _react3.default.createElement(
@@ -404,7 +418,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   coordinate: this.state.markerPosition,
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 265
+                    lineNumber: 273
                   }
                 },
                 _react3.default.createElement(
@@ -413,14 +427,14 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     style: styles.radius,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 266
+                      lineNumber: 274
                     }
                   },
                   _react3.default.createElement(_reactNative.View, {
                     style: styles.marker,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 267
+                      lineNumber: 275
                     }
                   })
                 )
@@ -431,7 +445,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   coordinates: polygon.coordinates,
                   holes: polygon.holes,
                   strokeColor: "#F00",
-                  fillColor: "rgba(255,0,0,0.5)",
+                  fillColor: "rgba(255,130,227,0.5)",
                   strokeWidth: 1,
                   tappable: true,
                   onPress: function onPress() {
@@ -439,7 +453,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   },
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 271
+                    lineNumber: 279
                   }
                 });
               }),
@@ -448,7 +462,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 coordinates: this.state.editing.coordinates,
                 holes: this.state.editing.holes,
                 strokeColor: "#000",
-                fillColor: "rgba(255,0,0,0.5)",
+                fillColor: "rgba(255,130,227,0.5)",
                 strokeWidth: 1,
                 tappable: true,
                 onPress: function onPress() {
@@ -456,7 +470,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 },
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 283
+                  lineNumber: 291
                 }
               })
             ),
@@ -466,11 +480,11 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 style: styles.buttonContainer,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 295
+                  lineNumber: 303
                 }
               },
               !this.state.edit && _react3.default.createElement(_reactNativeFab2.default, {
-                buttonColor: "red",
+                buttonColor: "#81FEC4",
                 iconTextColor: "#FFFFFF",
                 onClickAction: function onClickAction() {
                   _this4.edit();
@@ -478,11 +492,11 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 visible: true,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 297
+                  lineNumber: 305
                 }
               }),
               this.state.edit && _react3.default.createElement(_reactNativeFab2.default, {
-                buttonColor: "red",
+                buttonColor: "#81FEC4",
                 iconTextColor: "#FFFFFF",
                 onClickAction: function onClickAction() {
                   _this4.finish();
@@ -493,14 +507,14 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   {
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 300
+                      lineNumber: 308
                     }
                   },
                   "x"
                 ),
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 300
+                  lineNumber: 308
                 }
               })
             )
@@ -519,7 +533,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   },
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 313
+                    lineNumber: 321
                   }
                 },
                 _react3.default.createElement(
@@ -528,7 +542,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     style: styles.listRowContainer,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 314
+                      lineNumber: 322
                     }
                   },
                   _react3.default.createElement(
@@ -536,7 +550,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     {
                       __source: {
                         fileName: _jsxFileName,
-                        lineNumber: 315
+                        lineNumber: 323
                       }
                     },
                     rowData
@@ -550,13 +564,13 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 style: styles.separator,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 321
+                  lineNumber: 329
                 }
               });
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 309
+              lineNumber: 317
             }
           });
         }
@@ -597,7 +611,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
     buttonContainer: {
       flexDirection: 'row',
       marginVertical: 15,
-      paddingHorizontal: 160
+      paddingHorizontal: 185
     },
     listContainer: {
       flex: 1,
