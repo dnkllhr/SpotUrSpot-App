@@ -95,7 +95,7 @@ class PolygonCreator extends React.Component {
           this.setState({markerPosition: newPosition})
       },
       (error) => this.setState({ error: error.message }),
-      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000})
+      {enableHighAccuracy: true, timeout: 5000, distanceFilter: 1})
       this.watchID = navigator.geolocation.watchPosition((position) => {
           var lat = parseFloat(position.coords.latitude)
           var long = parseFloat(position.coords.longitude)
@@ -318,9 +318,9 @@ class PolygonCreator extends React.Component {
        style={styles.listContainer}
        dataSource={this.state.dataSource}
        renderRow={(rowData) =>
-       <TouchableHighlight underlayColor = '#E9F7FD' onPress={() => this.pressRow(rowData)}>
+       <TouchableHighlight underlayColor = '#000000' onPress={() => this.pressRow(rowData)}>
          <View style = {styles.listRowContainer}>
-           <Text>
+           <Text style={{color: 'white', fontSize: 18, fontFamily: "Circular"}}>
              {rowData}
            </Text>
          </View>
@@ -376,9 +376,10 @@ const styles = StyleSheet.create({
   },
   listRowContainer: {
     flex: 1,
-    padding: 16,
+    padding: 12,
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#0d0f0d'
   },
   separator: {
     flex: 1,

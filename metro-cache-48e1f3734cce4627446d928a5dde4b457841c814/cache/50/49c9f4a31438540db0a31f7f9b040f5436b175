@@ -175,8 +175,8 @@ __d(function (global, require, module, exports, _dependencyMap) {
           });
         }, {
           enableHighAccuracy: true,
-          timeout: 20000,
-          maximumAge: 1000
+          timeout: 5000,
+          distanceFilter: 1
         });
         this.watchID = navigator.geolocation.watchPosition(function (position) {
           var lat = parseFloat(position.coords.latitude);
@@ -527,7 +527,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
               return _react3.default.createElement(
                 _reactNative.TouchableHighlight,
                 {
-                  underlayColor: "#E9F7FD",
+                  underlayColor: "#000000",
                   onPress: function onPress() {
                     return _this4.pressRow(rowData);
                   },
@@ -548,6 +548,11 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   _react3.default.createElement(
                     _reactNative.Text,
                     {
+                      style: {
+                        color: 'white',
+                        fontSize: 18,
+                        fontFamily: "Circular"
+                      },
                       __source: {
                         fileName: _jsxFileName,
                         lineNumber: 323
@@ -619,9 +624,10 @@ __d(function (global, require, module, exports, _dependencyMap) {
     },
     listRowContainer: {
       flex: 1,
-      padding: 16,
+      padding: 12,
       flexDirection: 'row',
-      alignItems: 'center'
+      alignItems: 'center',
+      backgroundColor: '#0d0f0d'
     },
     separator: {
       flex: 1,
