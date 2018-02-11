@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import MapView, { MAP_TYPES, Polygon, ProviderPropType } from 'react-native-maps';
+import FAB from 'react-native-fab';
 export const { width, height } = Dimensions.get('window');
 export const ASPECT_RATIO = width / height;
 export const LATITUDE = 41.7998046;
@@ -26,6 +27,7 @@ class PolygonCreator extends React.Component {
     this.playlistNames = [];
     this.playlistData = {}
     this.state = {
+      edit: false,
       polygons: [],
       error: null,
       editing: null,
@@ -121,7 +123,12 @@ class PolygonCreator extends React.Component {
       polygons: [...polygons, editing],
       editing: null,
       creatingHole: false,
+      edit: false
     });
+  }
+
+  edit(){
+    this.setState({edit: true})
   }
 
   createHole() {
@@ -194,6 +201,7 @@ class PolygonCreator extends React.Component {
   }
 
   onPress(e) {
+    if(this.state.edit){
     const { editing, creatingHole } = this.state;
     if (!editing) {
       this.setState({
@@ -230,6 +238,7 @@ class PolygonCreator extends React.Component {
         },
       });
     }
+  }
   }
 
   render() {
@@ -278,17 +287,17 @@ class PolygonCreator extends React.Component {
               strokeColor="#000"
               fillColor="rgba(255,0,0,0.5)"
               strokeWidth={1}
+              tappable={true}
+              onPress={() => this.chooseMusic(polygon.id)}
             />
           )}
         </MapView>
         <View style={styles.buttonContainer}>
-          {this.state.editing && (
-            <TouchableOpacity
-              onPress={() => this.finish()}
-              style={[styles.bubble, styles.button]}
-            >
-              <Text>Finish</Text>
-            </TouchableOpacity>
+          {!this.state.edit && (
+            <FAB buttonColor="red" iconTextColor="#FFFFFF" onClickAction={() => {this.edit()}} visible={true} />
+          )}
+          {this.state.edit && (
+            <FAB buttonColor="red" iconTextColor="#FFFFFF" onClickAction={() => {this.finish()}} visible={true} iconTextComponent={<Text>x</Text>}/>
           )}
         </View>
       </View>
@@ -329,6 +338,7 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+    zIndex: -4
   },
   bubble: {
     backgroundColor: 'rgba(255,255,255,0.7)',
@@ -348,8 +358,9 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    marginVertical: 20,
-    backgroundColor: 'transparent',
+    marginVertical: 15,
+    paddingHorizontal: 160,
+    //backgroundColor: 'transparent',
   },
   listContainer: {
     flex: 1,

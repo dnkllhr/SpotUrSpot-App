@@ -1,0 +1,290 @@
+__d(function (global, require, module, exports, _dependencyMap) {
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _react2 = require(_dependencyMap[0], "react");
+
+  var _react3 = _interopRequireDefault(_react2);
+
+  var _index = require(_dependencyMap[1], "./../react-transform-hmr/lib/index.js");
+
+  var _index2 = _interopRequireDefault(_index);
+
+  var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+  var _class,
+      _temp2,
+      _jsxFileName = "/home/aidan/Documents/SpotUrSpot/node_modules/react-native-fab/index.js";
+
+  var _propTypes = require(_dependencyMap[2], "prop-types");
+
+  var _propTypes2 = _interopRequireDefault(_propTypes);
+
+  var _reactNative = require(_dependencyMap[3], "react-native");
+
+  var _src = require(_dependencyMap[4], "./src");
+
+  var _utils = require(_dependencyMap[5], "./src/utils");
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+  function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+  var _components = {
+    FAB: {
+      displayName: "FAB"
+    }
+  };
+
+  var _reactTransformHmrLibIndexJs2 = (0, _index2.default)({
+    filename: "/home/aidan/Documents/SpotUrSpot/node_modules/react-native-fab/index.js",
+    components: _components,
+    locals: [module],
+    imports: [_react3.default]
+  });
+
+  function _wrapComponent(id) {
+    return function (Component) {
+      return _reactTransformHmrLibIndexJs2(Component, id);
+    };
+  }
+
+  var sharpEasingValues = {
+    entry: _reactNative.Easing.bezier(0.0, 0.0, 0.2, 1),
+    exit: _reactNative.Easing.bezier(0.4, 0.0, 0.6, 1)
+  };
+  var durationValues = {
+    entry: 225,
+    exit: 195
+  };
+  var moveEasingValues = {
+    entry: _reactNative.Easing.bezier(0.0, 0.0, 0.2, 1),
+    exit: _reactNative.Easing.bezier(0.4, 0.0, 1, 1)
+  };
+
+  var styles = _reactNative.StyleSheet.create({
+    addButton: {
+      borderRadius: 50,
+      alignItems: 'stretch',
+      shadowColor: '#000000',
+      shadowOpacity: 0.8,
+      shadowRadius: 2,
+      shadowOffset: {
+        height: 1,
+        width: 0
+      },
+      elevation: 2
+    },
+    fab_box: {
+      position: 'absolute',
+      bottom: 20,
+      right: 20,
+      height: 56,
+      width: 56,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 50
+    },
+    addButtonInnerView: {
+      flex: 1,
+      borderRadius: 50,
+      alignItems: 'center',
+      justifyContent: 'center'
+    }
+  });
+
+  var FAB = _wrapComponent("FAB")((_temp2 = _class = function (_Component) {
+    _inherits(FAB, _Component);
+
+    function FAB() {
+      var _ref;
+
+      var _temp, _this, _ret;
+
+      _classCallCheck(this, FAB);
+
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = FAB.__proto__ || Object.getPrototypeOf(FAB)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+        translateValue: new _reactNative.Animated.Value(0),
+        shiftValue: new _reactNative.Animated.Value(0)
+      }, _temp), _possibleConstructorReturn(_this, _ret);
+    }
+
+    _createClass(FAB, [{
+      key: "componentDidMount",
+      value: function componentDidMount() {
+        var _state = this.state,
+            translateValue = _state.translateValue,
+            shiftValue = _state.shiftValue;
+        var _props = this.props,
+            visible = _props.visible,
+            snackOffset = _props.snackOffset;
+
+        if (visible) {
+          translateValue.setValue(1);
+        } else {
+          translateValue.setValue(0);
+        }
+
+        if (snackOffset === 0) {
+          shiftValue.setValue(20);
+        } else {
+          shiftValue.setValue(20 + snackOffset);
+        }
+      }
+    }, {
+      key: "componentWillReceiveProps",
+      value: function componentWillReceiveProps(nextProps) {
+        var _state2 = this.state,
+            translateValue = _state2.translateValue,
+            shiftValue = _state2.shiftValue;
+        var visible = this.props.visible;
+
+        if (nextProps.visible && !visible) {
+          _reactNative.Animated.timing(translateValue, {
+            duration: durationValues.entry,
+            toValue: 1,
+            easing: sharpEasingValues.entry
+          }).start();
+        } else if (!nextProps.visible && visible) {
+          _reactNative.Animated.timing(translateValue, {
+            duration: durationValues.exit,
+            toValue: 0,
+            easing: sharpEasingValues.exit
+          }).start();
+        }
+
+        if (nextProps.snackOffset !== this.props.snackOffset) {
+          if (nextProps.snackOffset === 0) {
+            _reactNative.Animated.timing(shiftValue, {
+              duration: durationValues.exit,
+              toValue: 20,
+              easing: moveEasingValues.exit
+            }).start();
+          } else if (nextProps.snackOffset !== 0) {
+            _reactNative.Animated.timing(shiftValue, {
+              duration: durationValues.entry,
+              toValue: 20 + nextProps.snackOffset,
+              easing: moveEasingValues.entry
+            }).start();
+          }
+        }
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        var _state3 = this.state,
+            translateValue = _state3.translateValue,
+            shiftValue = _state3.shiftValue;
+        var _props2 = this.props,
+            onClickAction = _props2.onClickAction,
+            buttonColor = _props2.buttonColor,
+            iconTextComponent = _props2.iconTextComponent,
+            iconTextColor = _props2.iconTextColor;
+        var dimensionInterpolate = translateValue.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 56]
+        });
+        var rotateInterpolate = translateValue.interpolate({
+          inputRange: [0, 1],
+          outputRange: ['-90deg', '0deg']
+        });
+        return _react3.default.createElement(
+          _reactNative.Animated.View,
+          {
+            style: [styles.fab_box, {
+              bottom: shiftValue
+            }],
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 166
+            }
+          },
+          _react3.default.createElement(
+            _reactNative.Animated.View,
+            {
+              style: [styles.addButton, {
+                height: dimensionInterpolate,
+                width: dimensionInterpolate
+              }],
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 167
+              }
+            },
+            _react3.default.createElement(
+              _src.Touchable,
+              {
+                onPress: onClickAction,
+                style: styles.addButtonInnerView,
+                buttonColor: buttonColor,
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 175
+                }
+              },
+              _react3.default.createElement(
+                _reactNative.Animated.Text,
+                {
+                  style: {
+                    transform: [{
+                      scaleX: translateValue
+                    }, {
+                      rotate: rotateInterpolate
+                    }],
+                    fontSize: 24
+                  },
+                  __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 180
+                  }
+                },
+                _react3.default.cloneElement(iconTextComponent, {
+                  style: {
+                    fontSize: 24,
+                    color: iconTextColor
+                  }
+                })
+              )
+            )
+          )
+        );
+      }
+    }]);
+
+    return FAB;
+  }(_react2.Component), _class.propTypes = {
+    buttonColor: _propTypes2.default.string,
+    iconTextColor: _propTypes2.default.string,
+    onClickAction: _propTypes2.default.func,
+    iconTextComponent: _propTypes2.default.element,
+    visible: _propTypes2.default.bool,
+    snackOffset: _propTypes2.default.number
+  }, _class.defaultProps = {
+    buttonColor: 'red',
+    iconTextColor: '#FFFFFF',
+    onClickAction: _utils.noop,
+    iconTextComponent: _react3.default.createElement(
+      _reactNative.Text,
+      {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 72
+        }
+      },
+      "+"
+    ),
+    visible: true,
+    snackOffset: 0
+  }, _temp2));
+
+  exports.default = FAB;
+});

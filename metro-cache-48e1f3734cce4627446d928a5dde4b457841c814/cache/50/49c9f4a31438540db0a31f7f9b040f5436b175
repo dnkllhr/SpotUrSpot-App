@@ -24,6 +24,10 @@ __d(function (global, require, module, exports, _dependencyMap) {
 
   var _reactNativeMaps2 = _interopRequireDefault(_reactNativeMaps);
 
+  var _reactNativeFab = require(_dependencyMap[4], "react-native-fab");
+
+  var _reactNativeFab2 = _interopRequireDefault(_reactNativeFab);
+
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
   function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -82,6 +86,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
       _this.playlistNames = [];
       _this.playlistData = {};
       _this.state = {
+        edit: false,
         polygons: [],
         error: null,
         editing: null,
@@ -207,7 +212,15 @@ __d(function (global, require, module, exports, _dependencyMap) {
         this.setState({
           polygons: [].concat(_toConsumableArray(polygons), [editing]),
           editing: null,
-          creatingHole: false
+          creatingHole: false,
+          edit: false
+        });
+      }
+    }, {
+      key: "edit",
+      value: function edit() {
+        this.setState({
+          edit: true
         });
       }
     }, {
@@ -308,34 +321,36 @@ __d(function (global, require, module, exports, _dependencyMap) {
     }, {
       key: "onPress",
       value: function onPress(e) {
-        var _state3 = this.state,
-            editing = _state3.editing,
-            creatingHole = _state3.creatingHole;
+        if (this.state.edit) {
+          var _state3 = this.state,
+              editing = _state3.editing,
+              creatingHole = _state3.creatingHole;
 
-        if (!editing) {
-          this.setState({
-            editing: {
-              id: id++,
-              coordinates: [e.nativeEvent.coordinate],
-              holes: []
-            }
-          });
-        } else if (!creatingHole) {
-          this.setState({
-            editing: _extends({}, editing, {
-              coordinates: [].concat(_toConsumableArray(editing.coordinates), [e.nativeEvent.coordinate])
-            })
-          });
-        } else {
-          var holes = [].concat(_toConsumableArray(editing.holes));
-          holes[holes.length - 1] = [].concat(_toConsumableArray(holes[holes.length - 1]), [e.nativeEvent.coordinate]);
-          this.setState({
-            editing: _extends({}, editing, {
-              id: id++,
-              coordinates: [].concat(_toConsumableArray(editing.coordinates)),
-              holes: holes
-            })
-          });
+          if (!editing) {
+            this.setState({
+              editing: {
+                id: id++,
+                coordinates: [e.nativeEvent.coordinate],
+                holes: []
+              }
+            });
+          } else if (!creatingHole) {
+            this.setState({
+              editing: _extends({}, editing, {
+                coordinates: [].concat(_toConsumableArray(editing.coordinates), [e.nativeEvent.coordinate])
+              })
+            });
+          } else {
+            var holes = [].concat(_toConsumableArray(editing.holes));
+            holes[holes.length - 1] = [].concat(_toConsumableArray(holes[holes.length - 1]), [e.nativeEvent.coordinate]);
+            this.setState({
+              editing: _extends({}, editing, {
+                id: id++,
+                coordinates: [].concat(_toConsumableArray(editing.coordinates)),
+                holes: holes
+              })
+            });
+          }
         }
       }
     }, {
@@ -362,7 +377,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
               style: styles.container,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 247
+                lineNumber: 256
               }
             },
             _react3.default.createElement(
@@ -380,7 +395,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
               }, mapOptions, {
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 248
+                  lineNumber: 257
                 }
               }),
               _react3.default.createElement(
@@ -389,7 +404,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   coordinate: this.state.markerPosition,
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 256
+                    lineNumber: 265
                   }
                 },
                 _react3.default.createElement(
@@ -398,14 +413,14 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     style: styles.radius,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 257
+                      lineNumber: 266
                     }
                   },
                   _react3.default.createElement(_reactNative.View, {
                     style: styles.marker,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 258
+                      lineNumber: 267
                     }
                   })
                 )
@@ -424,7 +439,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   },
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 262
+                    lineNumber: 271
                   }
                 });
               }),
@@ -435,9 +450,13 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 strokeColor: "#000",
                 fillColor: "rgba(255,0,0,0.5)",
                 strokeWidth: 1,
+                tappable: true,
+                onPress: function onPress() {
+                  return _this4.chooseMusic(polygon.id);
+                },
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 274
+                  lineNumber: 283
                 }
               })
             ),
@@ -447,32 +466,43 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 style: styles.buttonContainer,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 284
+                  lineNumber: 295
                 }
               },
-              this.state.editing && _react3.default.createElement(
-                _reactNative.TouchableOpacity,
-                {
-                  onPress: function onPress() {
-                    return _this4.finish();
-                  },
-                  style: [styles.bubble, styles.button],
-                  __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 286
-                  }
+              !this.state.edit && _react3.default.createElement(_reactNativeFab2.default, {
+                buttonColor: "red",
+                iconTextColor: "#FFFFFF",
+                onClickAction: function onClickAction() {
+                  _this4.edit();
                 },
-                _react3.default.createElement(
+                visible: true,
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 297
+                }
+              }),
+              this.state.edit && _react3.default.createElement(_reactNativeFab2.default, {
+                buttonColor: "red",
+                iconTextColor: "#FFFFFF",
+                onClickAction: function onClickAction() {
+                  _this4.finish();
+                },
+                visible: true,
+                iconTextComponent: _react3.default.createElement(
                   _reactNative.Text,
                   {
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 290
+                      lineNumber: 300
                     }
                   },
-                  "Finish"
-                )
-              )
+                  "x"
+                ),
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 300
+                }
+              })
             )
           );
         } else {
@@ -489,7 +519,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   },
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 304
+                    lineNumber: 313
                   }
                 },
                 _react3.default.createElement(
@@ -498,7 +528,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     style: styles.listRowContainer,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 305
+                      lineNumber: 314
                     }
                   },
                   _react3.default.createElement(
@@ -506,7 +536,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     {
                       __source: {
                         fileName: _jsxFileName,
-                        lineNumber: 306
+                        lineNumber: 315
                       }
                     },
                     rowData
@@ -520,13 +550,13 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 style: styles.separator,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 312
+                  lineNumber: 321
                 }
               });
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 300
+              lineNumber: 309
             }
           });
         }
@@ -545,7 +575,9 @@ __d(function (global, require, module, exports, _dependencyMap) {
       justifyContent: 'flex-end',
       alignItems: 'center'
     }),
-    map: _extends({}, _reactNative.StyleSheet.absoluteFillObject),
+    map: _extends({}, _reactNative.StyleSheet.absoluteFillObject, {
+      zIndex: -4
+    }),
     bubble: {
       backgroundColor: 'rgba(255,255,255,0.7)',
       paddingHorizontal: 18,
@@ -564,8 +596,8 @@ __d(function (global, require, module, exports, _dependencyMap) {
     },
     buttonContainer: {
       flexDirection: 'row',
-      marginVertical: 20,
-      backgroundColor: 'transparent'
+      marginVertical: 15,
+      paddingHorizontal: 160
     },
     listContainer: {
       flex: 1,
