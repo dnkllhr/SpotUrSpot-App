@@ -111,7 +111,16 @@ __d(function (global, require, module, exports, _dependencyMap) {
         for (var i = 0; i < spots.length; i++) {
           var current_location = [this.state.myPosition.latitude, this.state.myPosition.longitude];
 
-          if (this.inside(current_location, spots[i].coordinates)) {}
+          if (this.inside(current_location, spots[i].coordinates)) {
+            var postUrl = 'http://172.16.22.71:4040/api/playlists/' + spots[i].id.toString();
+            fetch(postUrl, {
+              method: 'POST',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+              }
+            });
+          }
         }
       }
     }, {
@@ -346,7 +355,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
               style: styles.container,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 236
+                lineNumber: 243
               }
             },
             _react3.default.createElement(
@@ -361,7 +370,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
               }, mapOptions, {
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 237
+                  lineNumber: 244
                 }
               }),
               _react3.default.createElement(
@@ -370,7 +379,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   coordinate: this.state.markerPosition,
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 244
+                    lineNumber: 251
                   }
                 },
                 _react3.default.createElement(
@@ -379,14 +388,14 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     style: styles.radius,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 245
+                      lineNumber: 252
                     }
                   },
                   _react3.default.createElement(_reactNative.View, {
                     style: styles.marker,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 246
+                      lineNumber: 253
                     }
                   })
                 )
@@ -405,7 +414,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   },
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 250
+                    lineNumber: 257
                   }
                 });
               }),
@@ -418,7 +427,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 strokeWidth: 1,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 262
+                  lineNumber: 269
                 }
               })
             ),
@@ -428,7 +437,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 style: styles.buttonContainer,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 272
+                  lineNumber: 279
                 }
               },
               this.state.editing && _react3.default.createElement(
@@ -440,7 +449,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   style: [styles.bubble, styles.button],
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 274
+                    lineNumber: 281
                   }
                 },
                 _react3.default.createElement(
@@ -448,7 +457,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   {
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 278
+                      lineNumber: 285
                     }
                   },
                   this.state.creatingHole ? 'Finish Hole' : 'Create Hole'
@@ -463,7 +472,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   style: [styles.bubble, styles.button],
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 282
+                    lineNumber: 289
                   }
                 },
                 _react3.default.createElement(
@@ -471,7 +480,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   {
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 286
+                      lineNumber: 293
                     }
                   },
                   "Finish"
@@ -493,7 +502,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   },
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 300
+                    lineNumber: 307
                   }
                 },
                 _react3.default.createElement(
@@ -502,7 +511,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     style: styles.listRowContainer,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 301
+                      lineNumber: 308
                     }
                   },
                   _react3.default.createElement(
@@ -510,7 +519,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     {
                       __source: {
                         fileName: _jsxFileName,
-                        lineNumber: 302
+                        lineNumber: 309
                       }
                     },
                     rowData
@@ -524,13 +533,13 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 style: styles.separator,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 308
+                  lineNumber: 315
                 }
               });
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 296
+              lineNumber: 303
             }
           });
         }

@@ -51,7 +51,14 @@ class PolygonCreator extends React.Component {
       for (var i = 0; i < spots.length; i++){
         var current_location = [this.state.myPosition.latitude, this.state.myPosition.longitude]
           if(this.inside(current_location, spots[i].coordinates)){
-              //send spot id to server endpoint
+            var postUrl = 'http://172.16.22.71:4040/api/playlists/' + spots[i].id.toString()
+            fetch(postUrl, {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                }
+              });
           }
       }
   }
