@@ -1,6 +1,6 @@
 import React from 'react';
 import MapView, { MAP_TYPES, Polygon, ProviderPropType } from 'react-native-maps';
-import {StyleSheet, View, Text, Dimensions, TouchableOpacity, ListView} from 'react-native';
+import {StyleSheet, View, Text, Dimensions, TouchableOpacity, ListView, Alert} from 'react-native';
 
 export const { width, height } = Dimensions.get('window');
 export const ASPECT_RATIO = width / height;
@@ -56,6 +56,12 @@ class getLocation extends React.Component {
                 longitude: long,
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA
+            }
+
+            if(this.state.myPosition.latitude - newPosition.latitude > 1){
+                Alert.alert(
+                    'Position Changed',
+                )
             }
 
             this.setState({myPosition: newPosition})
