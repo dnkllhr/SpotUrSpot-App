@@ -80,8 +80,8 @@ class PolygonCreator extends React.Component {
       return inside;
 };
 
-  componentDidMount(){
-    this.watchID = navigator.geolocation.watchPosition((position) => {
+componentDidMount(){
+      navigator.geolocation.getCurrentPosition((position)=>{
           var lat = parseFloat(position.coords.latitude)
           var long = parseFloat(position.coords.longitude)
           var newPosition = {
@@ -95,9 +95,23 @@ class PolygonCreator extends React.Component {
           this.setState({markerPosition: newPosition})
       },
       (error) => this.setState({ error: error.message }),
-      {enableHighAccuracy: true, timeout: 5000, distanceFilter: 1},
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000})
+      this.watchID = navigator.geolocation.watchPosition((position) => {
+          var lat = parseFloat(position.coords.latitude)
+          var long = parseFloat(position.coords.longitude)
+
+          var newPosition = {
+              latitude: lat,
+              longitude: long,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA
+          }
+
+          this.setState({myPosition: newPosition})
+          this.setState({markerPosition: newPosition})
+
           this.checkIfInSpot()
-    )
+      })
   }
 
   componentWillUnmount(){
