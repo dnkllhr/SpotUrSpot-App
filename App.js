@@ -279,14 +279,6 @@ class PolygonCreator extends React.Component {
         <View style={styles.buttonContainer}>
           {this.state.editing && (
             <TouchableOpacity
-              onPress={() => this.createHole()}
-              style={[styles.bubble, styles.button]}
-            >
-              <Text>{this.state.creatingHole ? 'Finish Hole' : 'Create Hole'}</Text>
-            </TouchableOpacity>
-          )}
-          {this.state.editing && (
-            <TouchableOpacity
               onPress={() => this.finish()}
               style={[styles.bubble, styles.button]}
             >
