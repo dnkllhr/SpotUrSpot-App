@@ -2,6 +2,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
+  exports.LONGITUDE_DELTA = exports.LATITUDE_DELTA = exports.LONGITUDE = exports.LATITUDE = exports.ASPECT_RATIO = exports.height = exports.width = undefined;
 
   var _react2 = require(_dependencyMap[0], "react");
 
@@ -56,11 +57,13 @@ __d(function (global, require, module, exports, _dependencyMap) {
       width = _Dimensions$get.width,
       height = _Dimensions$get.height;
 
-  var ASPECT_RATIO = width / height;
-  var LATITUDE = 37.78825;
-  var LONGITUDE = -122.4324;
-  var LATITUDE_DELTA = 0.0922;
-  var LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+  exports.width = width;
+  exports.height = height;
+  var ASPECT_RATIO = exports.ASPECT_RATIO = width / height;
+  var LATITUDE = exports.LATITUDE = 37.78825;
+  var LONGITUDE = exports.LONGITUDE = -122.4324;
+  var LATITUDE_DELTA = exports.LATITUDE_DELTA = 0.0922;
+  var LONGITUDE_DELTA = exports.LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
   var id = 0;
 
   var PolygonCreator = _wrapComponent("PolygonCreator")(function (_React$Component) {
@@ -79,23 +82,114 @@ __d(function (global, require, module, exports, _dependencyMap) {
       _this.playlistNames = [];
       _this.playlistData = {};
       _this.state = {
-        region: {
+        polygons: [],
+        error: null,
+        editing: null,
+        creatingHole: false,
+        mapView: true,
+        selectedID: null,
+        dataSource: _this.ds.cloneWithRows(_this.playlistNames),
+        myPosition: {
           latitude: LATITUDE,
           longitude: LONGITUDE,
           latitudeDelta: LATITUDE_DELTA,
           longitudeDelta: LONGITUDE_DELTA
         },
-        polygons: [],
-        editing: null,
-        creatingHole: false,
-        mapView: true,
-        selectedID: null,
-        dataSource: _this.ds.cloneWithRows(_this.playlistNames)
+        markerPosition: {
+          latitude: LATITUDE,
+          longitude: LONGITUDE
+        }
       };
       return _this;
     }
 
     _createClass(PolygonCreator, [{
+      key: "checkIfInSpot",
+      value: function checkIfInSpot() {
+        var spots = this.state.polygons;
+
+        for (var i = 0; i < spots.length; i++) {
+          var current_location = [this.state.myPosition.latitude, this.state.myPosition.longitude];
+
+          if (this.inside(current_location, spots[i].coordinates)) {}
+        }
+      }
+    }, {
+      key: "inside",
+      value: function inside(point, vs) {
+        var x = point[0],
+            y = point[1];
+        var inside = false;
+
+        for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+          var xi = vs[i].latitude,
+              yi = vs[i].longitude;
+          var xj = vs[j].latitude,
+              yj = vs[j].longitude;
+          var intersect = yi > y != yj > y && x < (xj - xi) * (y - yi) / (yj - yi) + xi;
+          if (intersect) inside = !inside;
+        }
+
+        return inside;
+      }
+    }, {
+      key: "componentDidMount",
+      value: function componentDidMount() {
+        var _this2 = this;
+
+        navigator.geolocation.getCurrentPosition(function (position) {
+          var lat = parseFloat(position.coords.latitude);
+          var long = parseFloat(position.coords.longitude);
+          var newPosition = {
+            latitude: lat,
+            longitude: long,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA
+          };
+
+          _this2.setState({
+            myPosition: newPosition
+          });
+
+          _this2.setState({
+            markerPosition: newPosition
+          });
+        }, function (error) {
+          return _this2.setState({
+            error: error.message
+          });
+        }, {
+          enableHighAccuracy: true,
+          timeout: 20000,
+          maximumAge: 1000
+        });
+        this.watchID = navigator.geolocation.watchPosition(function (position) {
+          var lat = parseFloat(position.coords.latitude);
+          var long = parseFloat(position.coords.longitude);
+          var newPosition = {
+            latitude: lat,
+            longitude: long,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA
+          };
+
+          _this2.setState({
+            myPosition: newPosition
+          });
+
+          _this2.setState({
+            markerPosition: newPosition
+          });
+
+          _this2.checkIfInSpot();
+        });
+      }
+    }, {
+      key: "componentWillUnmount",
+      value: function componentWillUnmount() {
+        navigator.geolocation.clearWatch(this.watchID);
+      }
+    }, {
       key: "finish",
       value: function finish() {
         var _state = this.state,
@@ -167,28 +261,28 @@ __d(function (global, require, module, exports, _dependencyMap) {
     }, {
       key: "chooseMusic",
       value: function chooseMusic(id) {
-        var _this2 = this;
+        var _this3 = this;
 
         fetch('http://172.16.22.71:4040/api/playlists/', {
           method: "GET"
         }).then(function (response) {
           return response.json();
         }).then(function (responseJson) {
-          _this2.playlistData = responseJson;
+          _this3.playlistData = responseJson;
 
           for (var i = 0; i < responseJson.items.length; i++) {
-            _this2.playlistNames.push(responseJson.items[i].name);
+            _this3.playlistNames.push(responseJson.items[i].name);
           }
 
-          _this2.setState({
-            dataSource: _this2.ds.cloneWithRows(_this2.playlistNames)
+          _this3.setState({
+            dataSource: _this3.ds.cloneWithRows(_this3.playlistNames)
           });
 
-          _this2.setState({
+          _this3.setState({
             selectedID: id
           });
 
-          _this2.setState({
+          _this3.setState({
             mapView: false
           });
         }).catch(function (err) {
@@ -231,7 +325,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
     }, {
       key: "render",
       value: function render() {
-        var _this3 = this;
+        var _this4 = this;
 
         var mapOptions = {
           scrollEnabled: true
@@ -241,7 +335,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
           mapOptions.scrollEnabled = false;
 
           mapOptions.onPanDrag = function (e) {
-            return _this3.onPress(e);
+            return _this4.onPress(e);
           };
         }
 
@@ -252,7 +346,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
               style: styles.container,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 170
+                lineNumber: 236
               }
             },
             _react3.default.createElement(
@@ -260,16 +354,43 @@ __d(function (global, require, module, exports, _dependencyMap) {
               _extends({
                 provider: this.props.provider,
                 style: styles.map,
-                initialRegion: this.state.region,
+                region: this.state.myPosition,
                 onPress: function onPress(e) {
-                  return _this3.onPress(e);
+                  return _this4.onPress(e);
                 }
               }, mapOptions, {
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 171
+                  lineNumber: 237
                 }
               }),
+              _react3.default.createElement(
+                _reactNativeMaps2.default.Marker,
+                {
+                  coordinate: this.state.markerPosition,
+                  __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 244
+                  }
+                },
+                _react3.default.createElement(
+                  _reactNative.View,
+                  {
+                    style: styles.radius,
+                    __source: {
+                      fileName: _jsxFileName,
+                      lineNumber: 245
+                    }
+                  },
+                  _react3.default.createElement(_reactNative.View, {
+                    style: styles.marker,
+                    __source: {
+                      fileName: _jsxFileName,
+                      lineNumber: 246
+                    }
+                  })
+                )
+              ),
               this.state.polygons.map(function (polygon) {
                 return _react3.default.createElement(_reactNativeMaps.Polygon, {
                   key: polygon.id,
@@ -280,11 +401,11 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   strokeWidth: 1,
                   tappable: true,
                   onPress: function onPress() {
-                    return _this3.chooseMusic(polygon.id);
+                    return _this4.chooseMusic(polygon.id);
                   },
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 179
+                    lineNumber: 250
                   }
                 });
               }),
@@ -297,7 +418,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 strokeWidth: 1,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 191
+                  lineNumber: 262
                 }
               })
             ),
@@ -307,19 +428,19 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 style: styles.buttonContainer,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 201
+                  lineNumber: 272
                 }
               },
               this.state.editing && _react3.default.createElement(
                 _reactNative.TouchableOpacity,
                 {
                   onPress: function onPress() {
-                    return _this3.createHole();
+                    return _this4.createHole();
                   },
                   style: [styles.bubble, styles.button],
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 203
+                    lineNumber: 274
                   }
                 },
                 _react3.default.createElement(
@@ -327,7 +448,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   {
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 207
+                      lineNumber: 278
                     }
                   },
                   this.state.creatingHole ? 'Finish Hole' : 'Create Hole'
@@ -337,12 +458,12 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 _reactNative.TouchableOpacity,
                 {
                   onPress: function onPress() {
-                    return _this3.finish();
+                    return _this4.finish();
                   },
                   style: [styles.bubble, styles.button],
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 211
+                    lineNumber: 282
                   }
                 },
                 _react3.default.createElement(
@@ -350,7 +471,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   {
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 215
+                      lineNumber: 286
                     }
                   },
                   "Finish"
@@ -368,11 +489,11 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 {
                   underlayColor: "#E9F7FD",
                   onPress: function onPress() {
-                    return _this3.pressRow(rowData);
+                    return _this4.pressRow(rowData);
                   },
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 229
+                    lineNumber: 300
                   }
                 },
                 _react3.default.createElement(
@@ -381,7 +502,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     style: styles.listRowContainer,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 230
+                      lineNumber: 301
                     }
                   },
                   _react3.default.createElement(
@@ -389,7 +510,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     {
                       __source: {
                         fileName: _jsxFileName,
-                        lineNumber: 231
+                        lineNumber: 302
                       }
                     },
                     rowData
@@ -403,13 +524,13 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 style: styles.separator,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 237
+                  lineNumber: 308
                 }
               });
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 225
+              lineNumber: 296
             }
           });
         }
@@ -464,6 +585,26 @@ __d(function (global, require, module, exports, _dependencyMap) {
       flex: 1,
       height: _reactNative.StyleSheet.hairlineWidth,
       backgroundColor: '#8E8E8E'
+    },
+    radius: {
+      height: 50,
+      width: 50,
+      borderRadius: 50 / 2,
+      overflow: 'hidden',
+      backgroundColor: 'rgba(0, 122, 255, 0.1)',
+      borderWidth: 1,
+      borderColor: 'rgba(0, 112, 255, 0.3)',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    marker: {
+      height: 20,
+      width: 20,
+      borderWidth: 3,
+      borderColor: 'white',
+      borderRadius: 20 / 2,
+      overflow: 'hidden',
+      backgroundColor: '#007AFF'
     },
     text: {
       marginLeft: 12,

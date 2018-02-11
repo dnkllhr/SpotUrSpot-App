@@ -34,7 +34,6 @@ class getLocation extends React.Component {
         navigator.geolocation.getCurrentPosition((position)=>{
             var lat = parseFloat(position.coords.latitude)
             var long = parseFloat(position.coords.longitude)
-
             var newPosition = {
                 latitude: lat,
                 longitude: long,
@@ -44,8 +43,8 @@ class getLocation extends React.Component {
 
             this.setState({myPosition: newPosition})
             this.setState({markerPosition: newPosition})
-        }, 
-        (error) => alert(JSON.stringify(error)), 
+        },
+        (error) => alert(JSON.stringify(error)),
         {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000})
         this.watchID = navigator.geolocation.watchPosition((position) => {
             var lat = parseFloat(position.coords.latitude)

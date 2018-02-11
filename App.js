@@ -6,14 +6,18 @@ import {
   Dimensions,
   TouchableOpacity,
   TouchableHighlight,
-  ListView
+  ListView,
+  Alert
 } from 'react-native';
 
 import MapView, { MAP_TYPES, Polygon, ProviderPropType } from 'react-native-maps';
-import * as constants from './getLocation';
-
+export const { width, height } = Dimensions.get('window');
+export const ASPECT_RATIO = width / height;
+export const LATITUDE = 37.78825;
+export const LONGITUDE = -122.4324;
+export const LATITUDE_DELTA = 0.0922;
+export const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 let id = 0;
-
 
 class PolygonCreator extends React.Component {
   constructor(props) {
@@ -22,19 +26,86 @@ class PolygonCreator extends React.Component {
     this.playlistNames = [];
     this.playlistData = {}
     this.state = {
-      region: {
-        latitude: constants.LATITUDE,
-        longitude: constants.LONGITUDE,
-        latitudeDelta: constants.LATITUDE_DELTA,
-        longitudeDelta: constants.LONGITUDE_DELTA,
-      },
       polygons: [],
+      error: null,
       editing: null,
       creatingHole: false,
       mapView: true,
       selectedID : null,
-      dataSource: this.ds.cloneWithRows(this.playlistNames)
+      dataSource: this.ds.cloneWithRows(this.playlistNames),
+      myPosition: {
+        latitude: LATITUDE,
+        longitude: LONGITUDE,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      },
+      markerPosition:{
+          latitude: LATITUDE,
+          longitude: LONGITUDE,
+      }
     };
+  }
+
+  checkIfInSpot() {
+      var spots = this.state.polygons;
+      for (var i = 0; i < spots.length; i++){
+        var current_location = [this.state.myPosition.latitude, this.state.myPosition.longitude]
+          if(this.inside(current_location, spots[i].coordinates)){
+              //send spot id to server endpoint
+          }
+      }
+  }
+
+   inside(point, vs) {
+      var x = point[0], y = point[1];
+      var inside = false;
+      for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+          var xi = vs[i].latitude, yi = vs[i].longitude;
+          var xj = vs[j].latitude, yj = vs[j].longitude;
+
+          var intersect = ((yi > y) != (yj > y))
+              && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+          if (intersect) inside = !inside;
+      }
+      return inside;
+};
+
+  componentDidMount(){
+      navigator.geolocation.getCurrentPosition((position)=>{
+          var lat = parseFloat(position.coords.latitude)
+          var long = parseFloat(position.coords.longitude)
+          var newPosition = {
+              latitude: lat,
+              longitude: long,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA
+          }
+
+          this.setState({myPosition: newPosition})
+          this.setState({markerPosition: newPosition})
+      },
+      (error) => this.setState({ error: error.message }),
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000})
+      this.watchID = navigator.geolocation.watchPosition((position) => {
+          var lat = parseFloat(position.coords.latitude)
+          var long = parseFloat(position.coords.longitude)
+
+          var newPosition = {
+              latitude: lat,
+              longitude: long,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA
+          }
+
+          this.setState({myPosition: newPosition})
+          this.setState({markerPosition: newPosition})
+
+          this.checkIfInSpot()
+      })
+  }
+
+  componentWillUnmount(){
+      navigator.geolocation.clearWatch(this.watchID)
   }
 
   finish() {
@@ -166,10 +237,15 @@ class PolygonCreator extends React.Component {
         <MapView
           provider={this.props.provider}
           style={styles.map}
-          initialRegion={this.state.region}
+          region={this.state.myPosition}
           onPress={e => this.onPress(e)}
           {...mapOptions}
         >
+        <MapView.Marker coordinate={this.state.markerPosition}>
+            <View style={styles.radius}>
+                <View style={styles.marker}/>
+            </View>
+        </MapView.Marker>
           {this.state.polygons.map(polygon => (
             <Polygon
               key={polygon.id}
@@ -285,6 +361,26 @@ const styles = StyleSheet.create({
     flex: 1,
     height: StyleSheet.hairlineWidth,
     backgroundColor: '#8E8E8E',
+  },
+  radius:{
+      height: 50,
+      width: 50,
+      borderRadius: 50/2,
+      overflow: 'hidden',
+      backgroundColor: 'rgba(0, 122, 255, 0.1)',
+      borderWidth: 1,
+      borderColor: 'rgba(0, 112, 255, 0.3)',
+      alignItems: 'center',
+      justifyContent: 'center'
+  },
+  marker:{
+      height: 20,
+      width: 20,
+      borderWidth: 3,
+      borderColor: 'white',
+      borderRadius: 20/2,
+      overflow: 'hidden',
+      backgroundColor: '#007AFF'
   },
   text: {
     marginLeft: 12,

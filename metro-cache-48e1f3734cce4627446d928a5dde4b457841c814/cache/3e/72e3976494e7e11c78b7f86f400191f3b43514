@@ -1,0 +1,239 @@
+__d(function (global, require, module, exports, _dependencyMap) {
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.LONGITUDE_DELTA = exports.LATITUDE_DELTA = exports.LONGITUDE = exports.LATITUDE = exports.ASPECT_RATIO = exports.height = exports.width = undefined;
+
+    var _react2 = require(_dependencyMap[0], "react");
+
+    var _react3 = _interopRequireDefault(_react2);
+
+    var _index = require(_dependencyMap[1], "./node_modules/react-transform-hmr/lib/index.js");
+
+    var _index2 = _interopRequireDefault(_index);
+
+    var _jsxFileName = "/home/aidan/Documents/SpotUrSpot/getLocation.js";
+
+    var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+    var _reactNativeMaps = require(_dependencyMap[2], "react-native-maps");
+
+    var _reactNativeMaps2 = _interopRequireDefault(_reactNativeMaps);
+
+    var _reactNative = require(_dependencyMap[3], "react-native");
+
+    function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+    function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+    function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+    var _components = {
+        getLocation: {
+            displayName: "getLocation"
+        }
+    };
+
+    var _node_modulesReactTransformHmrLibIndexJs2 = (0, _index2.default)({
+        filename: "/home/aidan/Documents/SpotUrSpot/getLocation.js",
+        components: _components,
+        locals: [module],
+        imports: [_react3.default]
+    });
+
+    function _wrapComponent(id) {
+        return function (Component) {
+            return _node_modulesReactTransformHmrLibIndexJs2(Component, id);
+        };
+    }
+
+    var _Dimensions$get = _reactNative.Dimensions.get('window'),
+        width = _Dimensions$get.width,
+        height = _Dimensions$get.height;
+
+    exports.width = width;
+    exports.height = height;
+    var ASPECT_RATIO = exports.ASPECT_RATIO = width / height;
+    var LATITUDE = exports.LATITUDE = 37.78825;
+    var LONGITUDE = exports.LONGITUDE = -122.4324;
+    var LATITUDE_DELTA = exports.LATITUDE_DELTA = 0.0922;
+    var LONGITUDE_DELTA = exports.LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+    var getLocation = _wrapComponent("getLocation")(function (_React$Component) {
+        _inherits(getLocation, _React$Component);
+
+        function getLocation(props) {
+            _classCallCheck(this, getLocation);
+
+            var _this = _possibleConstructorReturn(this, (getLocation.__proto__ || Object.getPrototypeOf(getLocation)).call(this, props));
+
+            _this.watchID = null;
+            _this.state = {
+                myPosition: {
+                    latitude: LATITUDE,
+                    longitude: LONGITUDE,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitudeDelta: LONGITUDE_DELTA
+                },
+                markerPosition: {
+                    latitude: LATITUDE,
+                    longitude: LONGITUDE
+                }
+            };
+            return _this;
+        }
+
+        _createClass(getLocation, [{
+            key: "componentDidMount",
+            value: function componentDidMount() {
+                var _this2 = this;
+
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var lat = parseFloat(position.coords.latitude);
+                    var long = parseFloat(position.coords.longitude);
+                    var newPosition = {
+                        latitude: lat,
+                        longitude: long,
+                        latitudeDelta: LATITUDE_DELTA,
+                        longitudeDelta: LONGITUDE_DELTA
+                    };
+
+                    _this2.setState({
+                        myPosition: newPosition
+                    });
+
+                    _this2.setState({
+                        markerPosition: newPosition
+                    });
+                }, function (error) {
+                    return alert(JSON.stringify(error));
+                }, {
+                    enableHighAccuracy: true,
+                    timeout: 20000,
+                    maximumAge: 1000
+                });
+                this.watchID = navigator.geolocation.watchPosition(function (position) {
+                    var lat = parseFloat(position.coords.latitude);
+                    var long = parseFloat(position.coords.longitude);
+                    var newPosition = {
+                        latitude: lat,
+                        longitude: long,
+                        latitudeDelta: LATITUDE_DELTA,
+                        longitudeDelta: LONGITUDE_DELTA
+                    };
+
+                    if (_this2.state.myPosition.latitude - newPosition.latitude > 1) {
+                        _reactNative.Alert.alert('Position Changed');
+                    }
+
+                    _this2.setState({
+                        myPosition: newPosition
+                    });
+
+                    _this2.setState({
+                        markerPosition: newPosition
+                    });
+                });
+            }
+        }, {
+            key: "componentWillUnmount",
+            value: function componentWillUnmount() {
+                navigator.geolocation.clearWatch(this.watchID);
+            }
+        }, {
+            key: "render",
+            value: function render() {
+                return _react3.default.createElement(
+                    _reactNative.View,
+                    {
+                        style: styles.container,
+                        __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 76
+                        }
+                    },
+                    _react3.default.createElement(
+                        _reactNativeMaps2.default,
+                        {
+                            style: styles.map,
+                            region: this.state.myPosition,
+                            __source: {
+                                fileName: _jsxFileName,
+                                lineNumber: 77
+                            }
+                        },
+                        _react3.default.createElement(
+                            _reactNativeMaps2.default.Marker,
+                            {
+                                coordinate: this.state.markerPosition,
+                                __source: {
+                                    fileName: _jsxFileName,
+                                    lineNumber: 79
+                                }
+                            },
+                            _react3.default.createElement(
+                                _reactNative.View,
+                                {
+                                    style: styles.radius,
+                                    __source: {
+                                        fileName: _jsxFileName,
+                                        lineNumber: 80
+                                    }
+                                },
+                                _react3.default.createElement(_reactNative.View, {
+                                    style: styles.marker,
+                                    __source: {
+                                        fileName: _jsxFileName,
+                                        lineNumber: 81
+                                    }
+                                })
+                            )
+                        )
+                    )
+                );
+            }
+        }]);
+
+        return getLocation;
+    }(_react3.default.Component));
+
+    var styles = _reactNative.StyleSheet.create({
+        container: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#F5FCFF'
+        },
+        map: {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            position: 'absolute'
+        },
+        radius: {
+            height: 50,
+            width: 50,
+            borderRadius: 50 / 2,
+            overflow: 'hidden',
+            backgroundColor: 'rgba(0, 122, 255, 0.1)',
+            borderWidth: 1,
+            borderColor: 'rgba(0, 112, 255, 0.3)',
+            alignItems: 'center',
+            justifyContent: 'center'
+        },
+        marker: {
+            height: 20,
+            width: 20,
+            borderWidth: 3,
+            borderColor: 'white',
+            borderRadius: 20 / 2,
+            overflow: 'hidden',
+            backgroundColor: '#007AFF'
+        }
+    });
+
+    exports.default = getLocation;
+});

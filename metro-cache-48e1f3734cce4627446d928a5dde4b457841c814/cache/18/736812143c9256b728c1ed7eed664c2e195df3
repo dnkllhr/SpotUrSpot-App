@@ -5,6 +5,10 @@ __d(function (global, require, module, exports, _dependencyMap) {
 
   var _App2 = _interopRequireDefault(_App);
 
+  var _getLocation = require(_dependencyMap[2], "./getLocation");
+
+  var _getLocation2 = _interopRequireDefault(_getLocation);
+
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
   _reactNative.AppRegistry.registerComponent('SpotUrSpot', function () {
