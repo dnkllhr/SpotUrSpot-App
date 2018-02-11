@@ -290,6 +290,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
         this.setState({
           mapView: true
         });
+        this.playlistNames = [];
       }
     }, {
       key: "chooseMusic",
@@ -368,6 +369,39 @@ __d(function (global, require, module, exports, _dependencyMap) {
         }
       }
     }, {
+      key: "renderHeader",
+      value: function renderHeader() {
+        return _react3.default.createElement(
+          _reactNative.View,
+          {
+            style: {
+              backgroundColor: '#81FEC4',
+              height: 60
+            },
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 254
+            }
+          },
+          _react3.default.createElement(
+            _reactNative.Text,
+            {
+              style: {
+                color: 'white',
+                fontSize: 20,
+                textAlign: 'center',
+                marginTop: 20
+              },
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 254
+              }
+            },
+            "Playlists"
+          )
+        );
+      }
+    }, {
       key: "render",
       value: function render() {
         var _this4 = this;
@@ -391,7 +425,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
               style: styles.container,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 264
+                lineNumber: 269
               }
             },
             _react3.default.createElement(
@@ -409,7 +443,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
               }, mapOptions, {
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 265
+                  lineNumber: 270
                 }
               }),
               _react3.default.createElement(
@@ -418,7 +452,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   coordinate: this.state.markerPosition,
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 273
+                    lineNumber: 278
                   }
                 },
                 _react3.default.createElement(
@@ -427,14 +461,14 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     style: styles.radius,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 274
+                      lineNumber: 279
                     }
                   },
                   _react3.default.createElement(_reactNative.View, {
                     style: styles.marker,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 275
+                      lineNumber: 280
                     }
                   })
                 )
@@ -453,7 +487,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   },
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 279
+                    lineNumber: 284
                   }
                 });
               }),
@@ -470,7 +504,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 },
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 291
+                  lineNumber: 296
                 }
               })
             ),
@@ -480,7 +514,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 style: styles.buttonContainer,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 303
+                  lineNumber: 308
                 }
               },
               !this.state.edit && _react3.default.createElement(_reactNativeFab2.default, {
@@ -492,7 +526,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 visible: true,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 305
+                  lineNumber: 310
                 }
               }),
               this.state.edit && _react3.default.createElement(_reactNativeFab2.default, {
@@ -507,14 +541,14 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   {
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 308
+                      lineNumber: 313
                     }
                   },
                   "x"
                 ),
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 308
+                  lineNumber: 313
                 }
               })
             )
@@ -527,13 +561,12 @@ __d(function (global, require, module, exports, _dependencyMap) {
               return _react3.default.createElement(
                 _reactNative.TouchableHighlight,
                 {
-                  underlayColor: "#000000",
                   onPress: function onPress() {
                     return _this4.pressRow(rowData);
                   },
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 321
+                    lineNumber: 326
                   }
                 },
                 _react3.default.createElement(
@@ -542,7 +575,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     style: styles.listRowContainer,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 322
+                      lineNumber: 327
                     }
                   },
                   _react3.default.createElement(
@@ -550,12 +583,12 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     {
                       style: {
                         color: 'white',
-                        fontSize: 18,
+                        fontSize: 16,
                         fontFamily: "Circular"
                       },
                       __source: {
                         fileName: _jsxFileName,
-                        lineNumber: 323
+                        lineNumber: 328
                       }
                     },
                     rowData
@@ -569,13 +602,14 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 style: styles.separator,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 329
+                  lineNumber: 334
                 }
               });
             },
+            renderHeader: this.renderHeader,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 317
+              lineNumber: 322
             }
           });
         }
@@ -619,20 +653,14 @@ __d(function (global, require, module, exports, _dependencyMap) {
       paddingHorizontal: 185
     },
     listContainer: {
-      flex: 1,
-      marginTop: 30
+      flex: 1
     },
     listRowContainer: {
       flex: 1,
-      padding: 12,
+      padding: 14,
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: '#0d0f0d'
-    },
-    separator: {
-      flex: 1,
-      height: _reactNative.StyleSheet.hairlineWidth,
-      backgroundColor: '#8E8E8E'
     },
     radius: {
       height: 50,

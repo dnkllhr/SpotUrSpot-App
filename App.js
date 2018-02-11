@@ -185,6 +185,7 @@ class PolygonCreator extends React.Component {
         }),
       });
       this.setState({ mapView: true });
+      this.playlistNames = []
   }
 
   chooseMusic(id){
@@ -247,6 +248,10 @@ class PolygonCreator extends React.Component {
       });
     }
   }
+  }
+
+  renderHeader() {
+    return <View style={{backgroundColor:'#81FEC4', height:60}}><Text style={{color: 'white', fontSize:20, textAlign:'center', marginTop: 20}}>Playlists</Text></View>
   }
 
   render() {
@@ -318,15 +323,16 @@ class PolygonCreator extends React.Component {
        style={styles.listContainer}
        dataSource={this.state.dataSource}
        renderRow={(rowData) =>
-       <TouchableHighlight underlayColor = '#000000' onPress={() => this.pressRow(rowData)}>
+       <TouchableHighlight onPress={() => this.pressRow(rowData)}>
          <View style = {styles.listRowContainer}>
-           <Text style={{color: 'white', fontSize: 18, fontFamily: "Circular"}}>
+           <Text style={{color: 'white', fontSize: 16, fontFamily: "Circular"}}>
              {rowData}
            </Text>
          </View>
        </TouchableHighlight>
          }
        renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
+       renderHeader={this.renderHeader}
     />
     )
   }
@@ -368,23 +374,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: 15,
     paddingHorizontal: 185,
-    //backgroundColor: 'transparent',
   },
-  listContainer: {
+  listContainer: {    //backgroundColor: 'transparent',
+
     flex: 1,
-    marginTop: 30,
   },
   listRowContainer: {
     flex: 1,
-    padding: 12,
+    padding: 14,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#0d0f0d'
-  },
-  separator: {
-    flex: 1,
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: '#8E8E8E',
   },
   radius:{
       height: 50,
