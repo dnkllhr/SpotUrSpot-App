@@ -13,8 +13,8 @@ import {
 import MapView, { MAP_TYPES, Polygon, ProviderPropType } from 'react-native-maps';
 export const { width, height } = Dimensions.get('window');
 export const ASPECT_RATIO = width / height;
-export const LATITUDE = 37.78825;
-export const LONGITUDE = -122.4324;
+export const LATITUDE = 41.7998046;
+export const LONGITUDE = -87.5894732;
 export const LATITUDE_DELTA = 0.0922;
 export const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 let id = 0;
@@ -251,7 +251,7 @@ class PolygonCreator extends React.Component {
           initialRegion={this.state.myPosition}
           onPress={e => this.onPress(e)}
           onRegionChange={myPosition => this.onRegionChange(myPosition)}
-          
+
           {...mapOptions}
         >
         <MapView.Marker coordinate={this.state.markerPosition}>

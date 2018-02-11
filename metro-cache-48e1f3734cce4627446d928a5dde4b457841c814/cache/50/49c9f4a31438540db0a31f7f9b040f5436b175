@@ -60,8 +60,8 @@ __d(function (global, require, module, exports, _dependencyMap) {
   exports.width = width;
   exports.height = height;
   var ASPECT_RATIO = exports.ASPECT_RATIO = width / height;
-  var LATITUDE = exports.LATITUDE = 37.78825;
-  var LONGITUDE = exports.LONGITUDE = -122.4324;
+  var LATITUDE = exports.LATITUDE = 41.7998046;
+  var LONGITUDE = exports.LONGITUDE = -87.5894732;
   var LATITUDE_DELTA = exports.LATITUDE_DELTA = 0.0922;
   var LONGITUDE_DELTA = exports.LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
   var id = 0;
@@ -299,6 +299,13 @@ __d(function (global, require, module, exports, _dependencyMap) {
         });
       }
     }, {
+      key: "onRegionChange",
+      value: function onRegionChange(myPosition) {
+        this.setState({
+          myPosition: myPosition
+        });
+      }
+    }, {
       key: "onPress",
       value: function onPress(e) {
         var _state3 = this.state,
@@ -355,7 +362,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
               style: styles.container,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 243
+                lineNumber: 247
               }
             },
             _react3.default.createElement(
@@ -363,14 +370,17 @@ __d(function (global, require, module, exports, _dependencyMap) {
               _extends({
                 provider: this.props.provider,
                 style: styles.map,
-                region: this.state.myPosition,
+                initialRegion: this.state.myPosition,
                 onPress: function onPress(e) {
                   return _this4.onPress(e);
+                },
+                onRegionChange: function onRegionChange(myPosition) {
+                  return _this4.onRegionChange(myPosition);
                 }
               }, mapOptions, {
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 244
+                  lineNumber: 248
                 }
               }),
               _react3.default.createElement(
@@ -379,7 +389,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   coordinate: this.state.markerPosition,
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 251
+                    lineNumber: 257
                   }
                 },
                 _react3.default.createElement(
@@ -388,14 +398,14 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     style: styles.radius,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 252
+                      lineNumber: 258
                     }
                   },
                   _react3.default.createElement(_reactNative.View, {
                     style: styles.marker,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 253
+                      lineNumber: 259
                     }
                   })
                 )
@@ -414,7 +424,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   },
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 257
+                    lineNumber: 263
                   }
                 });
               }),
@@ -427,7 +437,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 strokeWidth: 1,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 269
+                  lineNumber: 275
                 }
               })
             ),
@@ -437,9 +447,32 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 style: styles.buttonContainer,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 279
+                  lineNumber: 285
                 }
               },
+              this.state.editing && _react3.default.createElement(
+                _reactNative.TouchableOpacity,
+                {
+                  onPress: function onPress() {
+                    return _this4.createHole();
+                  },
+                  style: [styles.bubble, styles.button],
+                  __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 287
+                  }
+                },
+                _react3.default.createElement(
+                  _reactNative.Text,
+                  {
+                    __source: {
+                      fileName: _jsxFileName,
+                      lineNumber: 291
+                    }
+                  },
+                  this.state.creatingHole ? 'Finish Hole' : 'Create Hole'
+                )
+              ),
               this.state.editing && _react3.default.createElement(
                 _reactNative.TouchableOpacity,
                 {
@@ -449,7 +482,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   style: [styles.bubble, styles.button],
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 281
+                    lineNumber: 295
                   }
                 },
                 _react3.default.createElement(
@@ -457,7 +490,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   {
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 285
+                      lineNumber: 299
                     }
                   },
                   "Finish"
@@ -479,7 +512,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   },
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 299
+                    lineNumber: 313
                   }
                 },
                 _react3.default.createElement(
@@ -488,7 +521,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     style: styles.listRowContainer,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 300
+                      lineNumber: 314
                     }
                   },
                   _react3.default.createElement(
@@ -496,7 +529,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     {
                       __source: {
                         fileName: _jsxFileName,
-                        lineNumber: 301
+                        lineNumber: 315
                       }
                     },
                     rowData
@@ -510,13 +543,13 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 style: styles.separator,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 307
+                  lineNumber: 321
                 }
               });
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 295
+              lineNumber: 309
             }
           });
         }
