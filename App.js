@@ -9,15 +9,10 @@ import {
 } from 'react-native';
 
 import MapView, { MAP_TYPES, Polygon, ProviderPropType } from 'react-native-maps';
+import * as constants from './getLocation';
 
-const { width, height } = Dimensions.get('window');
-
-const ASPECT_RATIO = width / height;
-const LATITUDE = 37.78825;
-const LONGITUDE = -122.4324;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 let id = 0;
+
 
 class PolygonCreator extends React.Component {
   constructor(props) {
@@ -26,10 +21,10 @@ class PolygonCreator extends React.Component {
     // this.playlists = [];
     this.state = {
       region: {
-        latitude: LATITUDE,
-        longitude: LONGITUDE,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
+        latitude: constants.LATITUDE,
+        longitude: constants.LONGITUDE,
+        latitudeDelta: constants.LATITUDE_DELTA,
+        longitudeDelta: constants.LONGITUDE_DELTA,
       },
       polygons: [],
       editing: null,
