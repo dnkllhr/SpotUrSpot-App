@@ -5,6 +5,7 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
+  ListView
 } from 'react-native';
 
 import MapView, { MAP_TYPES, Polygon, ProviderPropType } from 'react-native-maps';
@@ -21,7 +22,8 @@ let id = 0;
 class PolygonCreator extends React.Component {
   constructor(props) {
     super(props);
-
+    //this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    // this.playlists = [];
     this.state = {
       region: {
         latitude: LATITUDE,
@@ -33,7 +35,10 @@ class PolygonCreator extends React.Component {
       editing: null,
       creatingHole: false,
       mapView: true,
-      selectedID : null
+      selectedID : null,
+      playlists: [],
+      item: null
+      //dataSource: this.ds.cloneWithRows(this.playlists)
     };
   }
 
@@ -74,7 +79,19 @@ class PolygonCreator extends React.Component {
     }
   }
 
+
+
   chooseMusic(id){
+    var item1 = "test";
+    fetch('http://httpbin.org/get', {method: "GET"}).then((response) => response.json())
+    .then((responseJson) => {
+      item1 = "not test";
+    })
+     // for(var i = 0; i < items.length; i += 1){
+     //   this.setState({ playlists: playlists.push(items[i]["name"])});
+     // }
+    this.setState({item : item1});
+    //this.setState({dataSource: this.ds.cloneWithRows(this.playlists)});
     this.setState({ mapView: false });
     this.setState({selectedID: id });
   }
@@ -186,9 +203,24 @@ class PolygonCreator extends React.Component {
   else {
     return(
       <View>
-        <Text> {this.state.selectedID} </Text>
+      <Text>
+        {this.state.item}
+      </Text>
       </View>
-    );
+    //   <ListView
+    //    dataSource={this.state.dataSource}
+    //    renderRow={(rowData) =>
+    //    <TouchableHighlight underlayColor = '#E9F7FD'>
+    //      <View>
+    //        <Text>
+    //          {rowData}
+    //        </Text>
+    //      </View>
+    //    </TouchableHighlight>
+    //      }
+    //    renderSeparator={(sectionId, rowId) => <View key={rowId} />}
+    // />
+    )
   }
 }
 
