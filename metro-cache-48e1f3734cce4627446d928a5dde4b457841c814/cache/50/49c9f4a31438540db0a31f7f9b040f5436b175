@@ -152,7 +152,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
       value: function componentDidMount() {
         var _this2 = this;
 
-        navigator.geolocation.getCurrentPosition(function (position) {
+        this.watchID = navigator.geolocation.watchPosition(function (position) {
           var lat = parseFloat(position.coords.latitude);
           var long = parseFloat(position.coords.longitude);
           var newPosition = {
@@ -177,27 +177,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
           enableHighAccuracy: true,
           timeout: 5000,
           distanceFilter: 1
-        });
-        this.watchID = navigator.geolocation.watchPosition(function (position) {
-          var lat = parseFloat(position.coords.latitude);
-          var long = parseFloat(position.coords.longitude);
-          var newPosition = {
-            latitude: lat,
-            longitude: long,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA
-          };
-
-          _this2.setState({
-            myPosition: newPosition
-          });
-
-          _this2.setState({
-            markerPosition: newPosition
-          });
-
-          _this2.checkIfInSpot();
-        });
+        }, this.checkIfInSpot());
       }
     }, {
       key: "componentWillUnmount",
@@ -380,7 +360,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 254
+              lineNumber: 240
             }
           },
           _react3.default.createElement(
@@ -394,7 +374,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
               },
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 254
+                lineNumber: 240
               }
             },
             "Playlists"
@@ -425,7 +405,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
               style: styles.container,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 269
+                lineNumber: 255
               }
             },
             _react3.default.createElement(
@@ -443,7 +423,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
               }, mapOptions, {
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 270
+                  lineNumber: 256
                 }
               }),
               _react3.default.createElement(
@@ -452,7 +432,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   coordinate: this.state.markerPosition,
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 278
+                    lineNumber: 264
                   }
                 },
                 _react3.default.createElement(
@@ -461,14 +441,14 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     style: styles.radius,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 279
+                      lineNumber: 265
                     }
                   },
                   _react3.default.createElement(_reactNative.View, {
                     style: styles.marker,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 280
+                      lineNumber: 266
                     }
                   })
                 )
@@ -487,7 +467,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   },
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 284
+                    lineNumber: 270
                   }
                 });
               }),
@@ -504,7 +484,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 },
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 296
+                  lineNumber: 282
                 }
               })
             ),
@@ -514,7 +494,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 style: styles.buttonContainer,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 308
+                  lineNumber: 294
                 }
               },
               !this.state.edit && _react3.default.createElement(_reactNativeFab2.default, {
@@ -526,7 +506,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 visible: true,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 310
+                  lineNumber: 296
                 }
               }),
               this.state.edit && _react3.default.createElement(_reactNativeFab2.default, {
@@ -541,14 +521,14 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   {
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 313
+                      lineNumber: 299
                     }
                   },
                   "x"
                 ),
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 313
+                  lineNumber: 299
                 }
               })
             )
@@ -566,7 +546,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                   },
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 326
+                    lineNumber: 312
                   }
                 },
                 _react3.default.createElement(
@@ -575,7 +555,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                     style: styles.listRowContainer,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 327
+                      lineNumber: 313
                     }
                   },
                   _react3.default.createElement(
@@ -588,7 +568,7 @@ __d(function (global, require, module, exports, _dependencyMap) {
                       },
                       __source: {
                         fileName: _jsxFileName,
-                        lineNumber: 328
+                        lineNumber: 314
                       }
                     },
                     rowData
@@ -602,14 +582,14 @@ __d(function (global, require, module, exports, _dependencyMap) {
                 style: styles.separator,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 334
+                  lineNumber: 320
                 }
               });
             },
             renderHeader: this.renderHeader,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 322
+              lineNumber: 308
             }
           });
         }
