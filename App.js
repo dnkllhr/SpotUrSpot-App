@@ -5,6 +5,7 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
+  TouchableHighlight,
   ListView
 } from 'react-native';
 
@@ -17,8 +18,9 @@ let id = 0;
 class PolygonCreator extends React.Component {
   constructor(props) {
     super(props);
-    //this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    // this.playlists = [];
+    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.playlistNames = [];
+    this.playlistData = {}
     this.state = {
       region: {
         latitude: constants.LATITUDE,
@@ -31,9 +33,7 @@ class PolygonCreator extends React.Component {
       creatingHole: false,
       mapView: true,
       selectedID : null,
-      playlists: [],
-      item: null
-      //dataSource: this.ds.cloneWithRows(this.playlists)
+      dataSource: this.ds.cloneWithRows(this.playlistNames)
     };
   }
 
@@ -74,21 +74,41 @@ class PolygonCreator extends React.Component {
     }
   }
 
-
+  pressRow(rowData){
+    var url = ""
+    for (var i = 0; i < this.playlistData.items.length; i++){
+      if(this.playlistData.items[i].name == rowData){
+        url = this.playlistData.items[i].external_urls.spotify
+      }
+    }
+    fetch('http://172.16.22.71:4040/api/spots/', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          spotID: this.state.selectedID.toString(),
+          playlistURL: url
+        }),
+      });
+      this.setState({ mapView: true });
+  }
 
   chooseMusic(id){
-    var item1 = "test";
-    fetch('http://httpbin.org/get', {method: "GET"}).then((response) => response.json())
+    fetch('http://172.16.22.71:4040/api/playlists/', {method: "GET"})
+    .then((response) => response.json())
     .then((responseJson) => {
-      item1 = "not test";
-    })
-     // for(var i = 0; i < items.length; i += 1){
-     //   this.setState({ playlists: playlists.push(items[i]["name"])});
-     // }
-    this.setState({item : item1});
-    //this.setState({dataSource: this.ds.cloneWithRows(this.playlists)});
-    this.setState({ mapView: false });
-    this.setState({selectedID: id });
+      this.playlistData = responseJson
+      for (let i = 0; i<responseJson.items.length; i++) {
+             this.playlistNames.push(responseJson.items[i].name);
+      }
+      this.setState({dataSource: this.ds.cloneWithRows(this.playlistNames)});
+      this.setState({selectedID: id });
+      this.setState({ mapView: false });
+    }).catch(err => {
+      console.log("fuck");
+    });
   }
 
   onPress(e) {
@@ -197,24 +217,20 @@ class PolygonCreator extends React.Component {
 
   else {
     return(
-      <View>
-      <Text>
-        {this.state.item}
-      </Text>
-      </View>
-    //   <ListView
-    //    dataSource={this.state.dataSource}
-    //    renderRow={(rowData) =>
-    //    <TouchableHighlight underlayColor = '#E9F7FD'>
-    //      <View>
-    //        <Text>
-    //          {rowData}
-    //        </Text>
-    //      </View>
-    //    </TouchableHighlight>
-    //      }
-    //    renderSeparator={(sectionId, rowId) => <View key={rowId} />}
-    // />
+      <ListView
+       style={styles.listContainer}
+       dataSource={this.state.dataSource}
+       renderRow={(rowData) =>
+       <TouchableHighlight underlayColor = '#E9F7FD' onPress={() => this.pressRow(rowData)}>
+         <View style = {styles.listRowContainer}>
+           <Text>
+             {rowData}
+           </Text>
+         </View>
+       </TouchableHighlight>
+         }
+       renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
+    />
     )
   }
 }
@@ -254,6 +270,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: 20,
     backgroundColor: 'transparent',
+  },
+  listContainer: {
+    flex: 1,
+    marginTop: 30,
+  },
+  listRowContainer: {
+    flex: 1,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  separator: {
+    flex: 1,
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: '#8E8E8E',
+  },
+  text: {
+    marginLeft: 12,
+    fontSize: 24,
   },
 });
 
