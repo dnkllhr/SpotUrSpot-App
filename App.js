@@ -251,7 +251,6 @@ class PolygonCreator extends React.Component {
           initialRegion={this.state.myPosition}
           onPress={e => this.onPress(e)}
           onRegionChange={myPosition => this.onRegionChange(myPosition)}
-
           {...mapOptions}
         >
         <MapView.Marker coordinate={this.state.markerPosition}>
@@ -283,14 +282,6 @@ class PolygonCreator extends React.Component {
           )}
         </MapView>
         <View style={styles.buttonContainer}>
-          {this.state.editing && (
-            <TouchableOpacity
-              onPress={() => this.createHole()}
-              style={[styles.bubble, styles.button]}
-            >
-              <Text>{this.state.creatingHole ? 'Finish Hole' : 'Create Hole'}</Text>
-            </TouchableOpacity>
-          )}
           {this.state.editing && (
             <TouchableOpacity
               onPress={() => this.finish()}
